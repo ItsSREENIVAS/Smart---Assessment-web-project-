@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SmartAssess – Computer Aptitude & Skill Assessment System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand" data-go="home" style="cursor:pointer"><div class="logo">⚡</div>SmartAssess</div>
+  <nav><button class="nb on" data-go="home">🏠 Home</button><button class="nb" data-go="history">📈 History</button><button class="nb" data-go="about">ℹ️ About</button></nav>
+  <button class="ghost" id="theme">🌙 Dark</button>
+</header>
+
+<section id="home" class="view on">
+  <div class="hero">
+    <div>
+      <span class="tag">Computer Aptitude & Skill Assessment</span>
+      <h1>Measure your <span>computer skills</span> in minutes</h1>
+      <p class="lead">Take a timed 20-question test across four key areas and get an instant performance dashboard with charts, skill level and personalised learning advice.</p>
+      <div class="start">
+        <input id="name" placeholder="Enter your full name" maxlength="40">
+        <select id="mode" aria-label="Test mode"><option value="all">Full Test · 20 questions</option><option value="quick">Quick Test · 10 random</option><option value="0">Practice: Logical Reasoning</option><option value="1">Practice: Programming Basics</option><option value="2">Practice: Networking &amp; Web</option><option value="3">Practice: Computer Fundamentals</option></select>
+        <select id="tlim" aria-label="Time limit"><option value="15">15 min limit</option><option value="30">30 min limit</option><option value="5">5 min limit</option><option value="0">No time limit</option></select>
+        <button class="btn" id="go">Start Assessment →</button>
+      </div>
+      <div class="stats"><div><b>20</b><small>Questions</small></div><div><b>4</b><small>Skill areas</small></div><div><b>15 min</b><small>Time limit</small></div></div>
+    </div>
+    <div class="card mock">
+      <h3>Sample Skill Report</h3><p>Live performance across categories</p>
+      <div class="bars"><i style="height:85%"></i><i style="height:60%"></i><i style="height:92%"></i><i style="height:70%"></i></div>
+      <div class="float" style="top:-14px;right:-8px">🏆 Level: Advanced</div>
+      <div class="float" style="bottom:-16px;left:-10px">📈 Score 82%</div>
+    </div>
+  </div>
+
+  <div class="sec"><h2>What you will be tested on</h2><p style="color:var(--muted);margin:0 0 22px">Four categories, five questions each.</p>
+    <div class="grid g4" id="cats"></div></div>
+
+  <div class="sec"><div class="grid g3">
+    <div class="card"><div class="ic">⏱️</div><h3>Timed Test</h3><p>A live countdown and per-question timing simulate a real exam.</p></div>
+    <div class="card"><div class="ic">📊</div><h3>Visual Analytics</h3><p>Doughnut, radar and bar charts show strengths and weak spots.</p></div>
+    <div class="card"><div class="ic">🎯</div><h3>Smart Feedback</h3><p>Skill level rating and recommended topics based on your results.</p></div>
+  </div></div>
+
+  <div class="sec" id="histBox" style="display:none"><div class="card"><h2>Previous Attempts</h2><div id="hist"></div></div></div>
+</section>
+
+<section id="quiz" class="view">
+  <div class="qtop"><button class="ghost" id="exit">✕ Exit test</button><span class="pill" id="qcat"></span><span class="pill" id="qcount"></span><span class="pill" id="timer">⏱ 15:00</span></div>
+  <div class="prog"><div id="bar"></div></div>
+  <div class="dots" id="dots"></div>
+  <div class="card qcard">
+    <div class="qtext" id="qtext"></div>
+    <div id="opts"></div>
+    <div class="qnav"><button class="ghost" id="prev">← Previous</button><button class="btn" id="next">Next →</button></div>
+  </div>
+</section>
+
+<section id="result" class="view">
+  <div class="card" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
+    <div><h2 id="rname"></h2><p style="margin:0;color:var(--muted)">Your performance report</p></div>
+    <div><span class="badge" id="rlevel" style="font-size:1.1rem;padding:8px 20px"></span></div>
+  </div>
+  <div class="sum" id="sum"></div>
+  <div class="charts">
+    <div class="card"><h3>Answer Breakdown</h3><div class="cv"><canvas id="c1"></canvas></div></div>
+    <div class="card"><h3>Skill Radar</h3><div class="cv"><canvas id="c2"></canvas></div></div>
+  </div>
+  <div class="charts">
+    <div class="card"><h3>Time per Question (seconds)</h3><div class="cv"><canvas id="c3"></canvas></div></div>
+    <div class="card"><h3>Category Scores</h3><div id="catbars" style="margin-top:14px"></div></div>
+  </div>
+  <div class="card" style="margin-bottom:20px"><h3>💡 Recommendations</h3><div id="recs"></div></div>
+  <div class="card"><h3>Answer Review</h3><div id="review"></div></div>
+  <div style="text-align:center;margin-top:26px"><button class="btn" id="retake">↻ Retake</button> <button class="ghost" data-go="home" style="padding:14px 20px">🏠 Home</button> <button class="ghost" data-go="history" style="padding:14px 20px">📈 History</button></div>
+</section>
+<section id="history" class="view">
+  <h2>Attempt History</h2><p class="mut" style="margin:0 0 6px">Your saved results and score trend.</p>
+  <div class="sum" id="hsum" style="grid-template-columns:repeat(3,1fr)"></div>
+  <div class="card" style="margin-bottom:20px"><h3>Score Trend</h3><div class="cv"><canvas id="c4"></canvas></div></div>
+  <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><h3>All Attempts</h3><button class="ghost" id="clr">🗑 Clear history</button></div><div id="hlist"></div></div>
+  <div style="text-align:center;margin-top:22px"><button class="btn" data-go="home">← Back to Home</button></div>
+</section>
+<section id="about" class="view">
+  <h2>About SmartAssess</h2>
+  <p class="mut" style="margin:0 0 20px">A web-based system that measures computer aptitude and technical skills, then turns the answers into clear visual feedback.</p>
+  <div class="grid g4" style="margin-bottom:20px">
+    <div class="card"><h3 style="color:#dc2626">Beginner</h3><p>Below 40%</p></div><div class="card"><h3 style="color:#f59e0b">Intermediate</h3><p>40% to 69%</p></div>
+    <div class="card"><h3 style="color:#16a34a">Advanced</h3><p>70% to 89%</p></div><div class="card"><h3 style="color:#7c3aed">Expert</h3><p>90% and above</p></div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><h3>How it works</h3><p>Choose a full test, a quick test or a single-category practice, pick a time limit, and answer. Use the number buttons to jump between questions, or the keyboard: A–D or 1–4 to answer, arrow keys to move.</p></div>
+    <div class="card"><h3>Built with</h3><p>HTML for structure, CSS for the responsive light and dark design, JavaScript for the test logic and local storage, and Chart.js for the charts.</p></div>
+  </div>
+  <div style="text-align:center;margin-top:22px"><button class="btn" data-go="home">← Back to Home</button></div>
+</section>
+<div id="toast"></div>
+<footer>SmartAssess · Web Programming Project · HTML, CSS & JavaScript</footer>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
